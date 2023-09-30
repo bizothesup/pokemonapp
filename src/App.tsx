@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{FunctionComponent} from 'react';
 import './App.css';
+import PokemonList from "./pokemons/pokemonList";
+import {Link, useRoutes} from "react-router-dom";
+import PokemonDetail from "./pokemons/pokemon-detail";
+import {NotFoundPages} from "./pages/NotFoundPages";
+import PokemonPages from "./pages/PokemonPages";
+import PokemonEdit from "./pokemons/form/PokemonEdit";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App:FunctionComponent=()=> {
+    const pokemonListRoute ={
+        path:'/',
+        element: <PokemonList/>
+    }
+    const pokemonRoute ={
+        path:'/pokemon/',
+        element: <PokemonPages/>,
+        children: [
+            {path:':id',element: <PokemonDetail/>},
+            {path:'edit/:id',element: <PokemonEdit/>},
+        ]
+    }
+    const notFoundPagesRoute={
+        path:'*',
+        element: <NotFoundPages/>
+    }
+
+    const routing = useRoutes([pokemonListRoute, pokemonRoute,notFoundPagesRoute]);
+
+    return (
+        <div>
+            <nav>
+                <div className="nav-wrapper teal">
+                    <Link to="/" className="brand-logo center">Polémon</Link>
+                </div>
+            </nav>
+            {routing}
+        </div>
+    )
 }
 
 export default App;
+
